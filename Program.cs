@@ -133,6 +133,27 @@ namespace App
                 }
             }
         }
+
+	public void Sort_Odd()
+        {
+            for (int i = 0; i < Massiv.Length - 2; i++)
+            {
+                int j = i;
+                while (j < Massiv.Length - 2)
+                {
+                    if (j % 2 != 0)
+                    {
+                        if (Massiv[j] < Massiv[j + 2])
+                        {
+                            int temp = Massiv[j + 2];
+                            Massiv[j + 2] = Massiv[j];
+                            Massiv[j] = temp;
+                        }
+                    }
+                    j++;
+                }
+            }
+        }
     }
 }
 
