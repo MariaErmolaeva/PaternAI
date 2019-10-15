@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
+
 
 namespace App
 {
@@ -17,116 +14,177 @@ namespace App
 
     public class View
     {
+        int countMassiv = 0;
         public void Main()
         {
-		//test for github
-            Presentor pres = new Presentor(5);
-            Console.WriteLine("\nВыберите один из вариантов: \n1.Добавить элемент\n2.Удалить элемент\n3.Показать массив\n4.Сортировать");
-            string Answer = "";
-            while (Answer != "0")
+            Console.WriteLine("Введите размер массива: ");
+            try
             {
-                Answer = Console.ReadLine();
-                int answer;
-                if (Int32.TryParse(Answer, out answer) == true)
+                if (Int32.TryParse(Console.ReadLine(), out countMassiv) == true)
                 {
-                    if (answer > 0 && answer < 5)
-                    {
-                        switch (answer)
-                        {
-                            case 1:
-                                Console.WriteLine("Введите число: ");
-                                int value;
-                                if (Int32.TryParse(Console.ReadLine(), out value) == true)
-                                {
-                                    pres.Add(value);
-                                    Console.WriteLine("Успешно\n");
-                                }
-                                else
-                                    Console.WriteLine("Некорректное число\n");
-                                break;
-                            case 2:
-                                Console.WriteLine("\nВведите индекс элемента: ");
-                                int index;
+                    Presentor pres = new Presentor(countMassiv);
 
-                                if (Int32.TryParse(Console.ReadLine(), out index) == true)
+                    Console.WriteLine("\nВыберите один из вариантов: \n1.Добавить элемент\n2.Удалить элемент\n3.Вывести одномерный массив\n4.Сортировать одномерный\n5.Вывести двумерный массив\n6.Добавить строку в двумерный");
+                    string answer = "";
+
+                    while (answer != "0")
+                    {
+                        answer = Console.ReadLine();
+                        int answer_;
+
+                        if (Int32.TryParse(answer, out answer_) == true)
+                        {
+                            if (answer_ > 0 && answer_ < 7)
+                            {
+                                switch (answer_)
                                 {
-                                    pres.Delete(index);
-                                    Console.WriteLine("\nУспешно");
+                                    case 1:
+                                        Console.WriteLine("Введите число: ");
+                                        int value;
+                                        if (Int32.TryParse(Console.ReadLine(), out value) == true)
+                                        {
+                                            pres.Add(value);
+                                            Console.WriteLine("Успешно\n");
+                                        }
+                                        else
+                                            Console.WriteLine("Некорректное число\n");
+                                        break;
+                                    case 2:
+                                        Console.WriteLine("\nВведите индекс элемента: ");
+                                        int index;
+
+                                        if (Int32.TryParse(Console.ReadLine(), out index) == true)
+                                        {
+                                            pres.Delete(index);
+                                            Console.WriteLine("\nУспешно");
+                                        }
+                                        else
+                                            Console.WriteLine("\nНекорректное число");
+                                        break;
+                                    case 3:
+                                        Console.WriteLine();
+                                        int[] massiv = pres.massiv;
+                                        for (int j = 0; j < massiv.Length; j++)
+                                            Console.WriteLine(massiv[j].ToString());
+                                        Console.WriteLine();
+                                        break;
+                                    case 4:
+                                        pres.Sort();
+                                        Console.WriteLine("\nУспешно\n");
+                                        break;
+                                    case 5:
+                                        Console.WriteLine();
+                                        int[,] massiv_2 = pres.massiv_2;
+                                        for (int i = 0; i < massiv_2.GetLength(0); i++)
+                                        {
+                                            for (int j = 0; j < massiv_2.GetLength(1); j++)
+                                                Console.Write(massiv_2[i, j].ToString() + "  ");
+                                            Console.WriteLine();
+                                        }
+                                        break;
+                                    case 6:
+                                        Console.WriteLine("Введите индекс строки: ");
+
+                                        if (Int32.TryParse(Console.ReadLine(), out index) == true)
+                                        {
+                                            if (pres.massiv_2.GetLength(0) > index + 1)
+                                            {
+                                                pres.Add_String(index);
+                                                Console.WriteLine("Успешно\n");
+                                            }
+                                            else
+                                                Console.WriteLine("Выход за границы массива");
+                                        }
+                                        else
+                                            Console.WriteLine("Некорректный индекс");
+                                        break;
                                 }
-                                else
-                                    Console.WriteLine("\nНекорректное число");
-                                break;
-                            case 3:
-                                Console.WriteLine();
-                                int[] massiv = pres.Massiv;
-                                for (int j = 0; j < massiv.Length; j++)
-                                    Console.WriteLine(massiv[j].ToString());
-                                Console.WriteLine();
-                                break;
-                            case 4:
-                                pres.Sort();
-                                Console.WriteLine("\nУспешно\n");
-                                break;
+                            }
+                            else
+                                Console.WriteLine("\nНет такой команды");
                         }
+                        else
+                            Console.WriteLine("\nНет такой команды");
                     }
-                    else
-                        Console.WriteLine("\nНет такой команды");
                 }
-                else
-                    Console.WriteLine("\nНет такой команды");
+            }
+            catch
+            {
+                Console.WriteLine("Некорректно введен размер массива");
             }
         }
     }
 
     public class Presentor
     {
-        public int[] Massiv;
+        public int[,] massiv_2;
+
+        public int[] massiv;
+
+       // public int[][] massiv_3; 
 
         public Presentor(int row)
         {
             Random rnd = new Random();
 
-            Massiv = new int[row];
+            massiv = new int[row];
 
             for (int i = 0; i < row; i++)
-                Massiv[i] = rnd.Next(40);
+                massiv[i] = rnd.Next(40);
+
+            massiv_2 = new int[row, row];
+
+            for (int i = 0; i < row; i++)
+                for (int j = 0; j < row; j++)
+                    massiv_2[i, j] = rnd.Next(50);
+
+            /*massiv_3 = new int[row][];
+
+            int N = 3;
+            for (int i = 0; i < row; i++)
+            {
+                massiv_3[i] = new int[N];
+                for (int j = 0; j < N; j++)
+                {
+                    massiv_3[i][j] = rnd.Next(40);
+                }
+                N++;
+            }
+            */
         }
 
         public void Add(int value)
         {
-            int lenght = Massiv.Length + 1;
-
-            Array.Resize(ref Massiv, lenght);
-
-            Massiv[lenght - 1] = value;
+            //добавление элемента в конец массива
+            int lenght = massiv.Length + 1;
+            Array.Resize(ref massiv, lenght);
+            massiv[lenght - 1] = value;
         }
 
         public void Delete(int index)
         {
-            int lenght = Massiv.Length;
-
-            for (int i = index; i < lenght - 1; i++)
-            {
-                Massiv[i] = Massiv[i + 1];
-            }
-
-            Array.Resize(ref Massiv, lenght - 1);
+            //удаление элемента по индексу
+            int length = massiv.Length;
+            for (int i = index; i < length - 1; i++)
+                massiv[i] = massiv[i + 1];
+            Array.Resize(ref massiv, length - 1);
         }
 
         public void Sort()
         {
-            for (int i = 0; i < Massiv.Length - 2; i++)
+            //сортировка четных элементов (по четным индексам)
+            for (int i = 0; i < massiv.Length - 2; i++)
             {
                 int j = i;
-                while (j < Massiv.Length - 2)
+                while (j < massiv.Length - 2)
                 {
                     if (j % 2 == 0)
                     {
-                        if (Massiv[j] < Massiv[j + 2])
+                        if (massiv[j] < massiv[j + 2])
                         {
-                            int temp = Massiv[j + 2];
-                            Massiv[j + 2] = Massiv[j];
-                            Massiv[j] = temp;
+                            int temp = massiv[j + 2];
+                            massiv[j + 2] = massiv[j];
+                            massiv[j] = temp;
                         }
                     }
                     j++;
@@ -134,27 +192,78 @@ namespace App
             }
         }
 
-	public void Sort_Odd()
+        public void Sort_Odd()
         {
-            for (int i = 0; i < Massiv.Length - 2; i++)
+            //по нечетным
+            for (int i = 0; i < massiv.Length - 2; i++)
             {
                 int j = i;
-                while (j < Massiv.Length - 2)
+                while (j < massiv.Length - 2)
                 {
                     if (j % 2 != 0)
                     {
-                        if (Massiv[j] < Massiv[j + 2])
+                        if (massiv[j] < massiv[j + 2])
                         {
-                            int temp = Massiv[j + 2];
-                            Massiv[j + 2] = Massiv[j];
-                            Massiv[j] = temp;
+                            int temp = massiv[j + 2];
+                            massiv[j + 2] = massiv[j];
+                            massiv[j] = temp;
                         }
                     }
                     j++;
+                }
+            }
+        }
+
+        public void Delete_Fist_Element()
+        {
+            //удаление первого четного элемента 0 или 2
+            for (int i = 0; i < massiv.Length - 1; i++)
+            {
+                int temp = massiv[i + 1];
+                massiv[i] = temp;
+            }
+            int lenght = massiv.Length - 1;
+            Array.Resize(ref massiv, lenght);
+        }
+
+        public void Add_String(int index)
+        {
+            //добавить строку с заданным номером
+            int length_row = massiv_2.GetLength(0);
+            int length_column = massiv_2.GetLength(1);
+
+            int[,] temp = new int[length_row, length_row];
+
+            temp = massiv_2;
+            massiv_2 = new int[length_row + 1, length_column];
+
+            for (int i = 0; i < length_row + 1; i++)
+            {
+                if (index > i)
+                {
+                    for (int j = 0; j < length_column; j++)
+                        massiv_2[i, j] = temp[i, j];
+                }
+                else
+                {
+                    if (index == i)
+                    {
+                        for (int j = 0; j < length_column; j++)
+                            massiv_2[i, j] = 0;
+                    }
+                    else
+                    {
+                        if (index < i)
+                        {
+                            for (int j = 0; j < length_column; j++)
+                                massiv_2[i, j] = temp[i - 1, j];
+                        }
+                    }
                 }
             }
         }
     }
 }
+
 
 
